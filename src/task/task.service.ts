@@ -11,6 +11,22 @@ export class TaskService {
 		return this.tasks;
 	}
 
+	getTaskById(id: string): Task {
+
+		return this.tasks.find(task => task.id === id);
+
+		//my code
+		// for (var i = 0; i < this.tasks.length; i++) {
+		// 	console.log('in loop');
+		// 	if (this.tasks[i].id == id) {
+		// 		console.log('found');
+		// 		return this.tasks[i];
+		// 	} else {
+		// 		console.log('not found');
+		// 	}
+		// }
+	}
+
 	createTask(createTaskDto: CreateTaskDto): Task {
 		const { title, description } = createTaskDto;
 		const task: Task = {
