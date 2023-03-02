@@ -1,7 +1,7 @@
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { CreateTaskDto } from './dto/create-tasks.dto';
 import { TaskService } from './task.service';
-import { Body, Controller, Get, Param, Post, Delete, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Patch, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { filter } from 'rxjs';
 
@@ -24,6 +24,7 @@ export class TaskController {
 	}
 
 	@Post()
+	@UsePipes(ValidationPipe)
 	createTask(@Body() createTaskDto: CreateTaskDto): Task {
 		return this.taskService.createTask(createTaskDto);
 	}
