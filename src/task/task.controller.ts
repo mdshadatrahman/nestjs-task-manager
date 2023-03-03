@@ -3,7 +3,6 @@ import { CreateTaskDto } from './dto/create-tasks.dto';
 import { TaskService } from './task.service';
 import { Body, Controller, Get, Param, Post, Delete, Patch, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
-import { filter } from 'rxjs';
 
 @Controller('tasks')
 export class TaskController {
