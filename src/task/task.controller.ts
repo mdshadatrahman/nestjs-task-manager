@@ -7,7 +7,7 @@ import { Task } from './task.entity';
 
 @Controller('tasks')
 export class TaskController {
-	constructor(private taskService: TaskService) { }
+	constructor(private readonly taskService: TaskService) { }
 
 	// @Get()
 	// getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] {
