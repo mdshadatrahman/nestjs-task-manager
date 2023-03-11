@@ -4,42 +4,43 @@ import { CreateTaskDto } from './dto/create-tasks.dto';
 import { TaskService } from './task.service';
 import { Body, Controller, Get, Param, Post, Delete, Patch, Query, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { Task } from './task.entity';
+import { TaskStatus } from './task-status.enum';
 
 @Controller('tasks')
 export class TaskController {
 	constructor(private readonly taskService: TaskService) { }
 
-	// @Get()
-	// getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] {
-	// 	if (Object.keys(filterDto).length) {
-	// 		return this.taskService.getTaskWithFilter(filterDto);
-	// 	} else {
-	// 		return this.taskService.getAllTasks();
-	// 	}
-	// }
+	@Get()
+	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Promise<Task[]> {
+		// if (Object.keys(filterDto).length) {
+		// 	return this.taskService.getTaskWithFilter(filterDto);
+		// } else {
+		return this.taskService.getAllTasks();
+		// }
+	}
 
 	@Get(':id')
 	getTaskById(@Param('id', ParseIntPipe) id: number): Promise<Task> {
 		return this.taskService.getTaskById(id);
 	}
 
-	// @Post()
-	// @UsePipes(ValidationPipe)
-	// createTask(@Body() createTaskDto: CreateTaskDto): Task {
-	// 	return this.taskService.createTask(createTaskDto);
-	// }
+	@Post()
+	@UsePipes(ValidationPipe)
+	createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+		return this.taskService.createTask(createTaskDto);
+	}
 
-	// @Delete(':id')
-	// deleteTask(@Param('id') id: string): void {
-	// 	return this.taskService.deleteTaskById(id);
-	// }
+	@Delete(':id')
+	deleteTask(@Param('id', ParseIntPipe) id: number): Promise<void> {
+		return this.taskService.deleteTaskById(id);
+	}
 
-	// @Patch(':id/status')
-	// updateTask(
-	// 	@Param('id') id: string,
-	// 	@Body('status', TaskStatusValidationPipe) status: TaskStatus
-	// ) {
-	// 	return this.taskService.updateTaskStatus(id, status);
-	// }
+	@Patch(':id/status')
+	updateTask(
+		@Param('id', ParseIntPipe) id: number,
+		@Body('status', TaskStatusValidationPipe) status: TaskStatus
+	): Promise<Task> {
+		return this.taskService.updateTaskStatus(id, status);
+	}
 
 }
