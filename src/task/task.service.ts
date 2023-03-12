@@ -1,19 +1,31 @@
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { CreateTaskDto } from './dto/create-tasks.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { TaskStatus } from './task-status.enum';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TaskService {
-  // constructor(
-  //   @InjectRepository(TaskRepository)
-  //   private taskRepository: TaskRepository,
-  // ) { }
+  constructor(
+    @InjectRepository(Task) private taskRepository: Repository<Task>,
+  ) { }
 
-  async getAllTasks(): Promise<Task[]> {
-    return await Task.find();
+  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
+    const { status, search } = filterDto;
+    const query = this.taskRepository.createQueryBuilder('task');
+
+    if (status) {
+      query.andWhere('task.status = :status', { status });
+    }
+
+    if (search) {
+      query.andWhere('task.title LIKE :search OR task.description LIKE :search', { search: `%${search}%` });
+    }
+
+    const task = await query.getMany();
+    return task;
   }
 
   async getTaskById(id: number): Promise<Task> {
@@ -23,25 +35,6 @@ export class TaskService {
     }
     return found;
   }
-
-  // getTaskWithFilter(filterDto: GetTasksFilterDto): Task[] {
-  //   const { status, search } = filterDto;
-  //   let tasks = this.getAllTasks();
-
-  //   if (status) {
-  //     tasks = tasks.filter(task => task.status === status);
-  //   }
-
-  //   if (search) {
-  //     tasks = tasks.filter(task =>
-  //       task.title.includes(search) ||
-  //       task.description.includes(search),
-  //     );
-  //   }
-
-
-  //   return tasks;
-  // }
 
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     const { title, description } = createTaskDto;

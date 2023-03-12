@@ -12,11 +12,7 @@ export class TaskController {
 
 	@Get()
 	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Promise<Task[]> {
-		// if (Object.keys(filterDto).length) {
-		// 	return this.taskService.getTaskWithFilter(filterDto);
-		// } else {
-		return this.taskService.getAllTasks();
-		// }
+		return this.taskService.getTasks(filterDto);
 	}
 
 	@Get(':id')
